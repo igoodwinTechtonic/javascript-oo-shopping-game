@@ -1,16 +1,63 @@
 let gameComplete = false;
+
 // Define the three constants here
+const name = 'unknown';
+const score = '0';
+const items = '0';
 
 // Define the player object here
-
+var player = {
+    name: name,
+    score: score,
+    items: items,
+    getCurrentScore() { return this.score; },
+    addPoints (points) { this.score += points; },
+    deductPoints (points) { this.score -= points; }
+};
 // Define the Product class - write the Constructor function for Product class here
+function Product(id, name, price, expiryDate) {
+    this.id = id;
+    this.name = name;
+    this.price = price;
+    this.expiryDate = expiryDate;
+}
+/* ES6 syntax
+class Product {
+    constructor(id, name, price, expiryDate) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.expiryDate = expiryDate;
+    }
+} */
 
 // Complete the dateDiff function
-const dateDiff = (date1, date2) => {};
+const dateDiff = (date1, date2) => {
+    return Math.floor(
+        (Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate()) 
+        - Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()) 
+        ) / (1000 * 60 * 60 * 24));
+};
+/*
+const dateDiff = (date1, date2) => {
+    var timeDiff = Math.abs(date2 - date1);
+    var dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 *24));
+    return dayDiff;
+};*/
 
 // Here, use Object.defineProperty to create property - daysToExpire
+Object.defineProperty(Product.prototype, 'daysToExpire', {
+    get() {
+        return dateDiff(this.expiryDate, new Date()); 
+    }
+});
 
 // Add method getDetails to Product here
+Object.defineProperty(Product, 'getDetails', {
+    getDetails() {
+        return `Product Name: ${this.name} , Product Price: ${this.price}`;
+    }
+});
 
 // Define the MagicProduct class here
 

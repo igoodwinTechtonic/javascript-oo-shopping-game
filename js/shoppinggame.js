@@ -33,37 +33,44 @@ class Product {
 
 // Complete the dateDiff function
 const dateDiff = (date1, date2) => {
-    return Math.floor(
-        (Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate()) 
-        - Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()) 
-        ) / (1000 * 60 * 60 * 24));
-};
-/*
-const dateDiff = (date1, date2) => {
     var timeDiff = Math.abs(date2 - date1);
     var dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 *24));
     return dayDiff;
-};*/
+};
 
 // Here, use Object.defineProperty to create property - daysToExpire
 Object.defineProperty(Product.prototype, 'daysToExpire', {
-    get() {
-        return dateDiff(this.expiryDate, new Date()); 
-    }
+    get() { return dateDiff(this.expiryDate, new Date()); }
 });
 
 // Add method getDetails to Product here
-Object.defineProperty(Product, 'getDetails', {
-    getDetails() {
-        return `Product Name: ${this.name} , Product Price: ${this.price}`;
-    }
-});
+Product.prototype.getDetails = function() {
+    return `Product Name: ${this.name} , Product Price: ${this.price}`;
+};
 
-// Define the MagicProduct class here
+// Define the MagicProduct class here 
+// MagicProduct is an extension of Product
+function MagicProduct(id, name, price, expiryDate, points, isBonus) {
+    Product.call(this, id, name, price, expiryDate);
+    this.points = points;
+    this.isBonus = isBonus;
+}
 
 // Establish inheritance between Product() & MagicProduct() here
+MagicProduct.prototype = Object.create(Product.prototype);
 
 // Define Rating class here
+class Rating {
+    constructor() {
+        rate = "";
+    }
+    set rating(value) {
+        if (value > 1 && value <= 4) { rate = 'OK'; }
+        else if (value >= 5 && value <= 7) { rate = 'GOOD';}
+        else if (value > 7) {rate = 'EXCEPTIONAL'; }
+        else { rate = 'BAD'; }
+    }
+}
 
 // Complete the loadProducts function
 const loadProducts = (map, prodId) => {
@@ -367,6 +374,7 @@ function init(data) {
 
     ///////////////////////////////////////////////////////////////
     const readline = require("readline");
+const { callbackify } = require("util");
     require('colors');
     const rl = readline.createInterface({
         input: process.stdin,
